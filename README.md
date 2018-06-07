@@ -1,4 +1,4 @@
 # tews
 Tsunami Early Warning System
 
-by **Astri Novianty**
+by **Astri Novianty** and _Hendy Irawan_
