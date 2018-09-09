@@ -19,7 +19,9 @@ jmespath==0.9.3
 kappa==0.6.0
 lambda-packages==0.20.0
 MarkupSafe==1.0
+mongoengine==0.15.3
 placebo==0.8.2
+pymongo==3.7.1
 python-dateutil==2.6.1
 python-slugify==1.2.4
 PyYAML==3.12
