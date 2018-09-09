@@ -1,6 +1,8 @@
 import json
+import os
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from mongoengine import *
 
@@ -35,15 +37,24 @@ class Earthquake(Document):
 
 
 app = Flask(__name__)
+CORS(app)
 
-connect('ecn')
+connect('ecn', host=os.getenv('MONGODB_URI', 'mongodb://localhost/ecn'))
 
 
 # t1 = Earthquake(name='Just testing', usgs_depth=5.2)
 # t1.save()
 
 def earthquake_to_json(earthquake: Earthquake):
-    return json.loads(earthquake.to_json())
+    json_obj = json.loads(earthquake.to_json())
+    json_obj['id'] = str(earthquake.id)
+    json_obj['originTime'] = earthquake.origin_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+    json_obj['irisOriginTime'] = earthquake.iris_origin_time.strftime(
+        '%Y-%m-%dT%H:%M:%SZ') if earthquake.iris_origin_time else None
+    json_obj['usgsOriginTime'] = earthquake.usgs_origin_time.strftime(
+        '%Y-%m-%dT%H:%M:%SZ') if earthquake.usgs_origin_time else None
+    return json_obj
+
 
 @app.route('/')
 def hello():
@@ -59,6 +70,6 @@ def earthquakes_list():
 
 @app.route('/earthquakes/<earthquake_id>')
 def earthquakes_detail(earthquake_id: str):
-    earthquake = Earthquake.objects(id=earthquake_id)
+    earthquake = Earthquake.objects(id=earthquake_id).first()
     earthquake_json = earthquake_to_json(earthquake)
     return jsonify(earthquake_json)
