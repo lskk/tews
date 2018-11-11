@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import torch
 
 novianty2018_model = torch.load('novianty2018.pt')
@@ -28,4 +29,4 @@ def predict(t0: float, td: float, mw: float):
     print('Tsunami potential output neurons: Yes=%s No=%s' % (float(y[0]), float(y[1])))
     print('Tsunami potential: Yes=%s No=%s' % (float(y[0]) >= 0.5, float(y[1]) >= 0.5))
 
-    return {'tsunamiYes': float(y[0]), 'tsunamiNo': float(y[1])}
+    return OrderedDict([('tsunamiYes', float(y[0])), ('tsunamiNo', float(y[1]))])

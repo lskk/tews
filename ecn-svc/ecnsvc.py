@@ -77,13 +77,20 @@ def earthquakes_detail(earthquake_id: str):
 
 
 @app.route('/tsunamiPotential/predict', methods=['POST'])
-def tsunami_potential_predict(t0: float, td: float, mw: float):
+def tsunami_potential_predict():
     """
     Predict tsunami potential.
+
+    Request body is JSON with {t0, td, mw}
 
     :param t0: Unnormalized rupture duration variable
     :param td: Unnormalized P-wave dominant period variable
     :param mw: Unnormalized moment magnitude (M_w)
     """
+    content = request.get_json()
+    t0: float = content['t0']
+    td: float = content['td']
+    mw: float = content['mw']
     potential = tsunami_potential.predict(t0, td, mw)
+    print('Potential: %s' % (potential,))
     return jsonify(potential)
