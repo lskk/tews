@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from mongoengine import *
 
+import tsunami_potential
 
 class Earthquake(Document):
     name = StringField(db_field='name', required=True)
@@ -56,20 +57,33 @@ def earthquake_to_json(earthquake: Earthquake):
     return json_obj
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def hello():
     return jsonify({'message': 'Check /earthquakes'})
 
 
-@app.route('/earthquakes')
+@app.route('/earthquakes', methods=['GET'])
 def earthquakes_list():
     earthquakes = Earthquake.objects()
     earthquakes_json = [earthquake_to_json(doc) for doc in earthquakes]
     return jsonify({'_embedded': {'earthquakes': earthquakes_json}})
 
 
-@app.route('/earthquakes/<earthquake_id>')
+@app.route('/earthquakes/<earthquake_id>', methods=['GET'])
 def earthquakes_detail(earthquake_id: str):
     earthquake = Earthquake.objects(id=earthquake_id).first()
     earthquake_json = earthquake_to_json(earthquake)
     return jsonify(earthquake_json)
+
+
+@app.route('/tsunamiPotential/predict', methods=['POST'])
+def tsunami_potential_predict(t0: float, td: float, mw: float):
+    """
+    Predict tsunami potential.
+
+    :param t0: Unnormalized rupture duration variable
+    :param td: Unnormalized P-wave dominant period variable
+    :param mw: Unnormalized moment magnitude (M_w)
+    """
+    potential = tsunami_potential.predict(t0, td, mw)
+    return jsonify(potential)
