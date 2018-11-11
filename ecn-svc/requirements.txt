@@ -25,7 +25,7 @@ placebo==0.8.2
 pymongo==3.7.1
 python-dateutil==2.6.1
 python-slugify==1.2.4
-PyYAML==3.12
+PyYAML==3.13
 requests==2.19.1
 s3transfer==0.1.13
 six==1.11.0
@@ -37,4 +37,4 @@ Unidecode==1.0.22
 urllib3==1.23
 Werkzeug==0.14.1
 wsgi-request-logger==0.4.6
-zappa==0.46.2
+zappa==0.47.0
