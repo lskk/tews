@@ -32,7 +32,6 @@ requests==2.19.1
 s3transfer==0.1.13
 six==1.11.0
 toml==0.9.6
-torch==0.4.1
 tqdm==4.19.1
 troposphere==2.3.3
 Unidecode==1.0.22
