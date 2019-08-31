@@ -1,5 +1,11 @@
 # ECN API Service
 
+## Prepare venv
+
+    python -m venv
+    venv\Scripts\activate
+    pip install -r requirements.txt
+
 ## Pytorch
 
 Windows, Python 3.7, CPU only no CUDA: (56 MB)
