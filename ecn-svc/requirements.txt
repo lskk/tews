@@ -21,9 +21,11 @@ lambda-packages==0.20.0
 MarkupSafe==1.0
 mongoengine==0.15.3
 numpy==1.15.4
+Pillow==6.1.0
 placebo==0.8.2
 pymongo==3.7.1
 python-dateutil==2.6.1
+python-dotenv==0.10.3
 python-slugify==1.2.4
 PyYAML==3.13
 requests==2.19.1

@@ -8,6 +8,9 @@ from mongoengine import *
 
 import tsunami_potential
 
+from dotenv import load_dotenv
+load_dotenv()
+
 class Earthquake(Document):
     name = StringField(db_field='name', required=True)
     usgs_id = StringField(db_field='usgsId')
@@ -37,6 +40,48 @@ class Earthquake(Document):
     }
 
 
+class TsunamiEvent(Document):
+    _id = IntField(db_field='_id')
+    year = IntField(db_field='YEAR')
+    month = IntField(db_field='MONTH')
+    day = IntField(db_field='DAY')
+    hour = IntField(db_field='HOUR')
+    minute = IntField(db_field='MINUTE')
+    second = IntField(db_field='SECOND')
+    focalDepth = FloatField(db_field='FOCAL_DEPTH')
+    primaryMagnitude = FloatField(db_field='PRIMARY_MAGNITUDE')
+    country = StringField(db_field='COUNTRY')
+    state = StringField(db_field='STATE')
+    locationName = StringField(db_field='LOCATION_NAME')
+    latitude = FloatField(db_field='LATITUDE')
+    longitude = FloatField(db_field='LONGITUDE')
+    maximumWaterHeight = FloatField(db_field='MAXIMUM_WATER_HEIGHT')
+    # origin_time = DateTimeField(db_field='originTime')
+    # usgs_origin_time = DateTimeField(db_field='usgsOriginTime')
+    # iris_origin_time = DateTimeField(db_field='irisOriginTime')
+    # noaa_location = StringField(db_field='noaaLocation')
+    # novianty_rupture_duration = FloatField(db_field='noviantyRuptureDuration')
+    # novianty_p_wave_dominant_period = FloatField(db_field='noviantyPWaveDominantPeriod')
+    # novianty_t0xtd = FloatField(db_field='noviantyT0xtd')
+    # novianty_mw = FloatField(db_field='noviantyMw')
+    # mw = FloatField(db_field='mw')
+    # usgs_mw = FloatField(db_field='usgsMw')
+    # iris_mw = FloatField(db_field='irisMw')
+    # noaa_tsunami = BooleanField(db_field='noaaTsunami')
+    # noaa_tsunami_id = IntField(db_field='noaaTsunamiId')
+    # unknown1 = IntField(db_field='unknown1')
+    # usgs_depth = FloatField(db_field='usgsDepth')
+    # collection_name = StringField(db_field='collectionName')
+    # collection_pos = IntField(db_field='collectionPos')
+    # epicenter = PointField(db_field='epicenter')
+    # usgs_epicenter = PointField(db_field='usgsEpicenter')
+
+    meta = {
+        'collection': 'tsevents',
+        'strict': False # temporary
+    }
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -54,6 +99,17 @@ def earthquake_to_json(earthquake: Earthquake):
         '%Y-%m-%dT%H:%M:%SZ') if earthquake.iris_origin_time else None
     json_obj['usgsOriginTime'] = earthquake.usgs_origin_time.strftime(
         '%Y-%m-%dT%H:%M:%SZ') if earthquake.usgs_origin_time else None
+    return json_obj
+
+
+def tsunami_event_to_json(tsunami_event: TsunamiEvent):
+    json_obj = json.loads(tsunami_event.to_json())
+    json_obj['id'] = tsunami_event._id
+    # json_obj['originTime'] = earthquake.origin_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+    # json_obj['irisOriginTime'] = earthquake.iris_origin_time.strftime(
+    #     '%Y-%m-%dT%H:%M:%SZ') if earthquake.iris_origin_time else None
+    # json_obj['usgsOriginTime'] = earthquake.usgs_origin_time.strftime(
+    #     '%Y-%m-%dT%H:%M:%SZ') if earthquake.usgs_origin_time else None
     return json_obj
 
 
@@ -94,3 +150,10 @@ def tsunami_potential_predict():
     potential = tsunami_potential.predict(t0, td, mw)
     print('Potential: %s' % (potential,))
     return jsonify(potential)
+
+
+@app.route('/tsunamiEvents', methods=['GET'])
+def tsunami_event_list():
+    tsunami_events = TsunamiEvent.objects.order_by('-year') [:100]
+    tsunami_events_json = [tsunami_event_to_json(doc) for doc in tsunami_events]
+    return jsonify({'_embedded': {'tsunamiEvents': tsunami_events_json}})
