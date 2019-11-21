@@ -8,12 +8,7 @@
 
 ## Pytorch
 
-Windows, Python 3.7, CPU only no CUDA: (56 MB)
-
-    pip install http://download.pytorch.org/whl/cpu/torch-0.4.1-cp37-cp37m-win_amd64.whl
-
-
-Torch 1.3.1 using CPU:
+Windows, Torch 1.3.1 using CPU no CUDA: (56+ MB)
     
         pip install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
@@ -28,7 +23,9 @@ Set these configuration in `.env` file.
 
 ## Run Locally
 
-    Set configuration in `.env` file as above.
+Set configuration in `.env` file as above.
 
-    set FLASK_APP=ecnsvc.py
+    set FLASK_APP=tpsvc.py
     python -m flask run
+
+API URL: http://localhost:5000/tsunamiPotential/predict
