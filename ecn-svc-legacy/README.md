@@ -1,5 +1,9 @@
 # ECN API Service
 
+## UPDATE: TensorFlow model
+
+For TensorFlow H5 model, see https://drive.google.com/open?id=1-JlAKGv2uSWTSGJCU7eZJ8tnCErY1SeX
+
 ## Prepare venv
 
     python -m venv
